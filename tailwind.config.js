@@ -13,6 +13,6 @@ module.exports = {
     logs: true,
     rtl: false,
     prefix: '',
-    themes: ['winter', 'night', 'cmyk'],
+    themes: ['night', 'winter', 'cmyk'],
   },
 }
