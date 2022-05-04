@@ -133,6 +133,9 @@ dist
 # Serverless Webpack directories
 .webpack/
 
+### Draw.io files ###
+/**/*.drawio
+
 # Optional stylelint cache
 
 # SvelteKit build / generate output
