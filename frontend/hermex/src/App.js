@@ -1,13 +1,9 @@
-import Hero from './Components/Hero'
-import Navbar from './Components/Navbar'
-import Footer from './Components/Footer'
+import WelcomePage from './Pages/WelcomePage'
 
 function App() {
   return (
     <>
-      <Navbar />
-      <Hero />
-      <Footer />
+      <WelcomePage />
     </>
   )
 }
