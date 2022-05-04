@@ -20,7 +20,7 @@ code {
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
 }
 
 /* Track */
@@ -34,6 +34,6 @@ code {
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  background: #33a8eb;
+  background: #384969;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
