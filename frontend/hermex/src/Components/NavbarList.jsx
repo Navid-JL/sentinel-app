@@ -1,38 +1,46 @@
+import { Link } from 'react-router-dom'
 import { FaMailBulk, FaHeart, FaCamera, FaHome, FaSpaceShuttle } from 'react-icons/fa'
 
 const NavbarList = () => {
   return (
+    //     <BrowserRouter>
+    //     <Routes>
+    //       <Route path="/" element={<WelcomePage />} />
+    //     </Routes>
+    //   </BrowserRouter>
     <ul
       tabIndex="0"
       className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
     >
       <li>
-        <a href="/home">
+        <Link to="/home">
           <FaHome /> Homepage
-        </a>
+        </Link>
       </li>
       <li>
-        <a href="/gallery">
+        <Link to="/gallery">
           <FaCamera /> Gallery
-        </a>
+        </Link>
       </li>
       <li>
-        <a href="/favs">
+        <Link to="/favs">
           <FaHeart /> Favourites
-        </a>
+        </Link>
       </li>
       <li>
-        <a href="/about">
+        <Link to="/about">
           <FaSpaceShuttle /> About
-        </a>
+        </Link>
       </li>
       <li>
-        <a href="/contact">
+        <Link to="/contact">
           <FaMailBulk /> Contact
-        </a>
+        </Link>
       </li>
       <li>
-        <button class="btn btn-success text-black mt-1">Register</button>
+        <Link className="btn btn-success text-black mt-1" to="/register">
+          Register
+        </Link>
       </li>
     </ul>
   )
