@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import heroImage from '../Assets/Images/hero.jpg'
 
 const Hero = () => {
@@ -10,7 +11,9 @@ const Hero = () => {
           <p className="mb-5">
             “Somewhere, something incredible is waiting to be known.” Carl Sagan
           </p>
-          <button className="btn btn-outline btn-primary">Explore</button>
+          <Link to="/home" className="btn btn-outline btn-primary">
+            Explore
+          </Link>
         </div>
       </div>
     </section>
