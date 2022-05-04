@@ -1,4 +1,4 @@
-import React from 'react'
+import { FaMailBulk, FaHeart, FaCamera, FaHome, FaSpaceShuttle } from 'react-icons/fa'
 
 const NavbarList = () => {
   return (
@@ -7,13 +7,29 @@ const NavbarList = () => {
       className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
     >
       <li>
-        <a href="/home">Homepage</a>
+        <a href="/home">
+          <FaHome /> Homepage
+        </a>
       </li>
       <li>
-        <a href="/gallery">Gallery</a>
+        <a href="/gallery">
+          <FaCamera /> Gallery
+        </a>
       </li>
       <li>
-        <a href="/favs">Favourites</a>
+        <a href="/favs">
+          <FaHeart /> Favourites
+        </a>
+      </li>
+      <li>
+        <a href="/about">
+          <FaSpaceShuttle /> About
+        </a>
+      </li>
+      <li>
+        <a href="/contact">
+          <FaMailBulk /> Contact
+        </a>
       </li>
       <li>
         <button class="btn btn-success text-black mt-1">Register</button>
