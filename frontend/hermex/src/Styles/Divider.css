@@ -7,7 +7,6 @@
 #news {
   background: url('../Assets/Images/news.jpg') no-repeat center/cover;
   z-index: 2 !important;
-  transition: all 0.5 4.5 ease-in-out !important;
 }
 
 #news:after {

@@ -1,9 +1,9 @@
-import logo from '../Assets/Icons/nebula-light.png'
+import logo from '../Assets/Icons/icons8_planet_64.png'
 import NavbarList from './NavbarList'
 
 const Navbar = () => {
   return (
-    <div className="navbar bg-base-100 sticky top-0 z-10">
+    <div className="navbar bg-base-100 sticky top-0 z-50 px-5">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex="0" className="btn btn-ghost btn-circle">
@@ -25,7 +25,7 @@ const Navbar = () => {
           <NavbarList />
         </div>
       </div>
-      <div className="navbar-center">
+      <div className="navbar-center lg:ml-28">
         <a className="btn btn-ghost normal-case text-xl" href="/">
           <img width="50px" height="50px" src={logo} alt="Hermex" />
         </a>

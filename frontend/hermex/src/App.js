@@ -9,6 +9,7 @@ function App() {
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/gallery" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </>

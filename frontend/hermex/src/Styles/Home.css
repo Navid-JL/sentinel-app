@@ -1,0 +1,16 @@
+#imagePost {
+  position: relative !important;
+}
+
+#imagePost:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+#imagePost h2,
+#imagePost p {
+  position: absolute;
+  top: 30%;
+  right: 50%;
+  transform: translate(50%, -50%);
+}
