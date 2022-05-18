@@ -1,4 +1,4 @@
-import logo from '../Assets/Icons/icons8_planet_64.png'
+import logo from '../../Assets/Icons/icons8_planet_64.png'
 import NavbarList from './NavbarList'
 
 const Navbar = () => {
@@ -25,7 +25,7 @@ const Navbar = () => {
           <NavbarList />
         </div>
       </div>
-      <div className="navbar-center lg:ml-28">
+      <div className="navbar-center">
         <a className="btn btn-ghost normal-case text-xl" href="/">
           <img width="50px" height="50px" src={logo} alt="Hermex" />
         </a>

@@ -11,7 +11,7 @@ const Hero = () => {
           <p className="mb-5">
             “Somewhere, something incredible is waiting to be known.” Carl Sagan
           </p>
-          <Link to="/home" className="btn btn-outline btn-primary">
+          <Link to="#feed" className="btn btn-outline btn-primary">
             Explore
           </Link>
         </div>
