@@ -1,5 +1,5 @@
 import heroImage from '../Assets/Images/hero.jpg'
-import { Link, animateScroll as scroll } from 'react-scroll'
+import { Link } from 'react-scroll'
 
 const Hero = () => {
   return (
