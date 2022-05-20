@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
 import heroImage from '../Assets/Images/hero.jpg'
+import { Link, animateScroll as scroll } from 'react-scroll'
 
 const Hero = () => {
   return (
@@ -11,7 +11,7 @@ const Hero = () => {
           <p className="mb-5">
             “Somewhere, something incredible is waiting to be known.” Carl Sagan
           </p>
-          <Link to="#feed" className="btn btn-outline btn-primary">
+          <Link to="feed" smooth={true} className="btn btn-outline btn-primary" spy={true}>
             Explore
           </Link>
         </div>
