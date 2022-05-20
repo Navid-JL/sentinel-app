@@ -13,9 +13,9 @@ const AboutPage = () => {
           id="aboutImg"
         ></div>
         <div className="divider"></div>
-        <div className="flex flex-col justify-center items-center text-justify text-2xl p-4">
+        <div className="flex flex-col justify-center items-center text-2xl p-4">
           <h3 className="text-center">About Us</h3>
-          <p className="p-4 text-center">
+          <p className="p-4 text-justify">
             Hermex is just a hobby project that was only created to satisfy the curiosity of space
             from all around the pale blue dot.
           </p>
