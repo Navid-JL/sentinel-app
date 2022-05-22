@@ -41,7 +41,7 @@ code {
 }
 
 #gallery {
-  background: url('./Assets/Images/nebula1.jpg') no-repeat center/cover;
+  background: url('./Assets/Images/nebula.jpg') no-repeat center/cover;
   z-index: 2 !important;
 }
 
@@ -81,4 +81,8 @@ code {
 #aboutImg {
   background: url('./Assets/Images/aboutus.jpg') no-repeat center/cover;
   z-index: 2 !important;
+}
+
+#errorDiv {
+  background: url('./Assets/Images/purple-nebula.png') no-repeat center/cover;
 }
