@@ -19,7 +19,7 @@ const AboutPage = () => {
             Hermex is just a hobby project that was only created to satisfy the curiosity of space
             from all around the pale blue dot.
           </p>
-          <Link to="/" className="btn btn-secondary sm:w-full md:w-32">
+          <Link to="/" className="btn btn-accent w-full md:w-32">
             Home
           </Link>
         </div>
