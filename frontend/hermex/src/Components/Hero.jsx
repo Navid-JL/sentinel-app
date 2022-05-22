@@ -11,7 +11,7 @@ const Hero = () => {
           <p className="mb-5">
             “Somewhere, something incredible is waiting to be known.” Carl Sagan
           </p>
-          <Link to="feed" smooth={true} className="btn btn-outline btn-primary" spy={true}>
+          <Link to="divider" smooth={true} className="btn btn-outline btn-accent" spy={true}>
             Explore
           </Link>
         </div>
