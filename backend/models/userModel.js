@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const asyncHandler = require('express-async-handler')
+const { generateToken } = require('../controllers/authController')
 
 const userSchema = mongoose.Schema(
   {
@@ -29,6 +29,11 @@ const userSchema = mongoose.Schema(
       default: true,
       select: false,
     },
+    tokens: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -47,6 +52,13 @@ userSchema.pre('save', async function (next) {
   }
 })
 
+// Generate token for new user
+userSchema.pre('save', function (next) {
+  const token = generateToken(this.id)
+  this.tokens.push(token)
+  next()
+})
+
 // Remove password and __v from user object
 userSchema.post('save', async function (next) {
   try {
@@ -57,9 +69,15 @@ userSchema.post('save', async function (next) {
   }
 })
 
+// Remove inactive users from find queries
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } })
   next()
 })
+
+// Check whether the passwords match or not
+userSchema.methods.checkPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword)
+}
 
 module.exports = mongoose.model('User', userSchema)
