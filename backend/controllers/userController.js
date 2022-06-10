@@ -87,6 +87,6 @@ exports.getMe = asyncHandler(async (req, res) => {
 // @route DELETE /api/users/me
 // @access Private
 exports.deleteMe = asyncHandler(async (req, res) => {
-  await User.findByIdAndDelete(req.user.id)
+  await User.findByIdAndUpdate(req.user.id, { active: false }, { new: true })
   res.json({})
 })
