@@ -1,12 +1,6 @@
-const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel.js')
-
-exports.generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  })
-}
+const jwt = require('jsonwebtoken')
 
 exports.protect = asyncHandler(async (req, res, next) => {
   let token

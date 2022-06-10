@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const { generateToken } = require('../middleware/generateToken')
 const bcrypt = require('bcryptjs')
-const { generateToken } = require('../middleware/authMiddleware')
 
 const userSchema = mongoose.Schema(
   {
@@ -44,7 +45,7 @@ const userSchema = mongoose.Schema(
 userSchema.pre('save', async function (next) {
   try {
     const salt = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(this.password, salt)
+    const hashPassword = bcrypt.hash(this.password, salt)
     this.password = hashPassword
     return next()
   } catch (error) {
@@ -54,9 +55,13 @@ userSchema.pre('save', async function (next) {
 
 // Generate token for new user
 userSchema.pre('save', function (next) {
-  const token = generateToken(this.id)
-  this.tokens.push(token)
-  next()
+  try {
+    const token = generateToken(this.id)
+    this.tokens.push(token)
+    next()
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 // Remove password and __v from user object

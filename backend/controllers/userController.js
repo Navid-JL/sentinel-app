@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
-const { generateToken } = require('../middleware/authMiddleware')
+const { generateToken } = require('../middleware/generateToken')
 
 // @desc Register new user
 // @route POST /api/users/register
@@ -76,6 +76,17 @@ exports.loginUser = asyncHandler(async (req, res) => {
   })
 })
 
+// @desc Get user
+// @route GET /api/users/me
+// @access Private
 exports.getMe = asyncHandler(async (req, res) => {
   res.json(req.user)
+})
+
+// @desc Delete user
+// @route DELETE /api/users/me
+// @access Private
+exports.deleteMe = asyncHandler(async (req, res) => {
+  await User.findByIdAndDelete(req.user.id)
+  res.json({})
 })
