@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
-const { generateToken } = require('./authController')
+const { generateToken } = require('../middleware/authMiddleware')
 
 // @desc Register new user
 // @route POST /api/users/register
@@ -74,4 +74,8 @@ exports.loginUser = asyncHandler(async (req, res) => {
     email: userWithNewToken.email,
     token,
   })
+})
+
+exports.getMe = asyncHandler(async (req, res) => {
+  res.json(req.user)
 })

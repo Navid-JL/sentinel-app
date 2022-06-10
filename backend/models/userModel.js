@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const { generateToken } = require('../controllers/authController')
+const { generateToken } = require('../middleware/authMiddleware')
 
 const userSchema = mongoose.Schema(
   {
