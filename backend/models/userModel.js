@@ -57,8 +57,9 @@ userSchema.post('save', async function (next) {
   }
 })
 
-// userSchema.pre(/^find/, function(next) {
-
-// })
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } })
+  next()
+})
 
 module.exports = mongoose.model('User', userSchema)
