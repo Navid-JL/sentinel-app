@@ -22,13 +22,15 @@ const userSchema = mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
-      select: false
-    }
+      select: false,
+    },
   },
   {
     timestamps: true,
   }
 )
+
+// Hash password
 userSchema.pre('save', async function (next) {
   try {
     const salt = await bcrypt.genSalt(10)
@@ -40,6 +42,7 @@ userSchema.pre('save', async function (next) {
   }
 })
 
+// Remove password and __v from user object
 userSchema.post('save', async function (next) {
   try {
     this.password = undefined
@@ -49,8 +52,8 @@ userSchema.post('save', async function (next) {
   }
 })
 
-userSchema.pre(/^find/, function(next) {
-  this.
-})
+// userSchema.pre(/^find/, function(next) {
+
+// })
 
 module.exports = mongoose.model('User', userSchema)
