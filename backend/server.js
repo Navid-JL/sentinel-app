@@ -2,6 +2,9 @@ require('dotenv').config()
 const express = require('express')
 const colors = require('colors')
 
+// Connect to the database
+connectDB()
+
 // Express API
 const app = express()
 
