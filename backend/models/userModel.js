@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const { generateToken } = require('../middleware/generateToken')
-const bcrypt = require('bcryptjs')
+const genToken = require('../helpers/genToken')
 
 const userSchema = mongoose.Schema(
   {
@@ -30,39 +28,12 @@ const userSchema = mongoose.Schema(
       default: true,
       select: false,
     },
-    tokens: [
-      {
-        type: String,
-      },
-    ],
+    refreshToken: [String],
   },
   {
     timestamps: true,
   }
 )
-
-// Hash password
-userSchema.pre('save', async function (next) {
-  try {
-    const salt = await bcrypt.genSalt(10)
-    const hashPassword = bcrypt.hash(this.password, salt)
-    this.password = hashPassword
-    return next()
-  } catch (error) {
-    return next(error)
-  }
-})
-
-// Generate token for new user
-userSchema.pre('save', function (next) {
-  try {
-    const token = generateToken(this.id)
-    this.tokens.push(token)
-    next()
-  } catch (error) {
-    console.log(error)
-  }
-})
 
 // Remove password and __v from user object
 userSchema.post('save', async function (next) {
@@ -79,10 +50,5 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } })
   next()
 })
-
-// Check whether the passwords match or not
-userSchema.methods.checkPassword = async function (candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword)
-}
 
 module.exports = mongoose.model('User', userSchema)

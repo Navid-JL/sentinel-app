@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const morgan = require('morgan')
 
 // Connect to the database
 connectDB()
@@ -17,6 +18,8 @@ connectDB()
 const app = express()
 
 app.set('trust proxy', 1)
+
+app.use(morgan('dev'))
 
 // Implement CORS
 app.use(cors())
