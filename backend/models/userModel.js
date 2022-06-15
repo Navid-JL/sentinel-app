@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const genToken = require('../helpers/genToken')
 
 const userSchema = mongoose.Schema(
   {
@@ -32,6 +31,8 @@ const userSchema = mongoose.Schema(
   },
   {
     timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
   }
 )
 

@@ -55,10 +55,10 @@ app.use(xss())
 // )
 
 // API endpoints
-app.use('/api/users', require('./routes/userRoutes'))
-app.use('/api/apod', require('./routes/apodRoutes'))
+app.use('/api/v1/users', require('./routes/userRoutes'))
+app.use('/api/v1/apod', require('./routes/apodRoutes'))
 
-// Handle wrong url
+// Handle unhandled routes
 app.all('*', (req, res, next) => {
   res.status(404)
   next(new Error(`${req.originalUrl} was not found`))
