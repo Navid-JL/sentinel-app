@@ -28,12 +28,24 @@ app.use(cors())
 app.use(helmet())
 
 // Limit requests from same API
-const limiter = rateLimit({
+// Global limiter
+const globalLimiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour',
 })
-app.use('/api', limiter)
+// User limiter
+const userLimiter = rateLimit({
+  max: 5,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour',
+})
+// Apod limiter
+const apodLimiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour',
+})
 
 // Parse incoming requests
 app.use(express.json())

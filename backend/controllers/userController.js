@@ -1,7 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
-const genToken = require('../helpers/genToken')
+const { genJWT } = require('../middleware/authMiddleware')
+const { encryptPassword } = require('../helpers/encryptPassword')
 const bcrypt = require('bcryptjs')
+const validator = require('validator')
 
 // @desc Register new user
 // @route POST /api/users/register
@@ -15,6 +17,36 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new Error('Please add all fields')
   }
 
+  // Check whether user's name is letter only or not
+  if (!validator.isAlpha(name.replace(/\s/g, ''), 'en-GB')) {
+    res.status(400)
+    throw new Error('Please enter a valid name')
+  }
+
+  // Check whether user's email is standard or not
+  if (
+    !validator.isEmail(email, {
+      allow_utf8_local_part: false,
+      ignore_max_length: false,
+      allow_ip_domain: false,
+      domain_specific_validation: true,
+      blacklisted_chars: `+ < ) [ & ! ? % # { $ ' " \ : / ^ = ~ ` + '`',
+    })
+  ) {
+    res.status(400)
+    throw new Error('Please enter a valid email')
+  }
+
+  // Check whether user's password is strong or not
+  if (
+    validator.isStrongPassword(password, {
+      returnScore: true,
+    }) < 50
+  ) {
+    res.status(400)
+    throw new Error('Password is not strong enough')
+  }
+
   // Check if user already exists
   const userExists = await User.findOne({ email })
   if (userExists) {
@@ -23,14 +55,11 @@ exports.registerUser = asyncHandler(async (req, res) => {
   }
 
   // Generate salt and hash user's password
-  const salt = await bcrypt.genSalt(10)
-  const hashedPassword = await bcrypt.hash(password, salt)
-
   // Register user
   const user = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password: await encryptPassword(10, password),
   })
 
   if (user) {
@@ -38,7 +67,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
-      token: genToken(user.id),
+      token: genJWT(user.id),
     })
   } else {
     res.status(400)
@@ -58,27 +87,28 @@ exports.loginUser = asyncHandler(async (req, res) => {
     throw new Error('Please add all fields')
   }
 
-  const user = await User.findOne({ email })
+  // Check whether user's email is standard or not
+  if (
+    !validator.isEmail(email, {
+      allow_utf8_local_part: false,
+      ignore_max_length: false,
+      allow_ip_domain: false,
+      domain_specific_validation: true,
+      blacklisted_chars: `+ < ) [ & ! ? % # { $ ' " \ : / ^ = ~ ` + '`',
+    })
+  ) {
+    res.status(400)
+    throw new Error('Please enter a valid email')
+  }
+
+  const user = await User.findOne({ email }).select('+password')
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    // Get all the tokens from user's tokens list
-    let userTokens = user.tokens
-    // Generate a new token
-    const token = genToken(user.id)
-    // Push the newly generated token to the userTokens array
-    userTokens.push(token)
-    // Add the new token to the user's tokens list
-    const userWithNewToken = await User.findByIdAndUpdate(
-      user.id,
-      { tokens: userTokens },
-      { new: true }
-    )
-
     res.json({
-      _id: userWithNewToken.id,
-      name: userWithNewToken.name,
-      email: userWithNewToken.email,
-      token,
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: genJWT(user.id),
     })
   } else {
     res.status(401)

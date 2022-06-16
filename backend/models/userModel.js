@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
+const asyncHandler = require('express-async-handler')
 
 const userSchema = mongoose.Schema(
   {
@@ -27,7 +30,7 @@ const userSchema = mongoose.Schema(
       default: true,
       select: false,
     },
-    refreshToken: [String],
+    passwordChangedAt: Date,
   },
   {
     timestamps: true,
@@ -51,5 +54,16 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } })
   next()
 })
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
+
+    return JWTTimestamp < changedTimestamp
+  }
+
+  // If not changed
+  return false
+}
 
 module.exports = mongoose.model('User', userSchema)

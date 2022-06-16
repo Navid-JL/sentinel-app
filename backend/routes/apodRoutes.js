@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { getTodayApod, getAllApods } = require('../controllers/apodController')
+const { protect } = require('../middleware/authMiddleware')
 
 // const { getApod } = require('../apis/apodAPI')
 // const Apod = require('../models/apodModel')
@@ -12,6 +13,6 @@ const { getTodayApod, getAllApods } = require('../controllers/apodController')
 
 router.route('/').get(getAllApods)
 
-router.route('/today').get(getTodayApod)
+router.route('/today').get(protect, getTodayApod)
 
 module.exports = router
