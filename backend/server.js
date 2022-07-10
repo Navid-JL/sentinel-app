@@ -1,44 +1,22 @@
-// API: import dependencies
-require('dotenv').config()
-const express = require('express')
-const colors = require('colors')
-const connectDB = require('./config/db')
-const morgan = require('morgan')
-const cors = require('cors')
-const { errorHandler } = require('./middleware/errorHandler')
+const fs = require('fs')
+const path = require('path')
+// Import http module
+const https = require('https')
 
-// API: Connect to DB
-connectDB()
+// Import the app
+const app = require('./app')
 
-// API: create express app
-const app = express()
+// Create a https server
+const server = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, './ssl/key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, './ssl/cert.pem')),
+  },
+  app
+)
 
-console.log(process.env.MONGO_URI)
-
-// API: Log requests into the console
-app.use(morgan('dev'))
-
-// API: Cors
-app.use(cors())
-
-// API: Parse incoming requests
-app.use(express.urlencoded({ extended: true, limit: '100kb' }))
-app.use(express.json({ limit: '150kb' }))
-
-// API: Endpoints
-app.use('/api/v1/apod', require('./routes/apodRoutes'))
-
-// API: Handle unknown routes
-app.all('*', (req, res, next) => {
-  res.status(404)
-  next(new Error(`${req.originalUrl} was not found`))
-})
-
-// API: Error Handler
-app.use(errorHandler)
-
-// API: Listen on a port
+// Listen on a port
 const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port: `.brightWhite + `${PORT}`.brightBlue)
 })

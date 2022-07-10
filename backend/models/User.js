@@ -1,9 +1,4 @@
 const mongoose = require('mongoose')
-const asyncHandler = require('express-async-handler')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const crypto = require('crypto')
-const { genRandomBytes } = require('../helpers/genRandomBytes')
 
 const UserSchema = mongoose.Schema(
   {
@@ -32,9 +27,6 @@ const UserSchema = mongoose.Schema(
       default: true,
       select: false,
     },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
   },
   {
     timestamps: true,

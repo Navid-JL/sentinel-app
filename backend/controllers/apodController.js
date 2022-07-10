@@ -11,16 +11,16 @@ exports.getTodayImage = asyncHandler(async (req, res) => {
   const todayDate = new Date().toISOString().substring(0, 10)
   // Check if today's apod image already exists
   const todayImage = await Apod.findOne({
-    date: date,
+    date: todayDate,
   })
   // If not send a HTTP request to APOD and persist it to the DB
-  if (!todayApod) {
+  if (!todayImage) {
     const newApodImage = await getApod({})
     await Apod.create(newApodImage)
-    res.json(newApodImage)
+    return res.json(newApodImage)
   } else {
     // Send the apod
-    res.json({
+    return res.json({
       todayImage,
     })
   }
@@ -30,14 +30,8 @@ exports.getAllImages = asyncHandler(async (req, res) => {
   const features = new APIFeatures(Apod.find(), req.query).filter().sort().limitFields().paginate()
   const apods = await features.query
 
-  res.json({
+  return res.json({
     doc_length: apods.length,
     apods,
   })
 })
-
-exports.populateApodDb = async (req, res) => {
-  const apods = await getApod({ count: 10 })
-  await Apod.insertMany(apods)
-  res.json(apods)
-}

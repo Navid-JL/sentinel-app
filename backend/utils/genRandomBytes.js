@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
-const genRandomBytes = () => {
-  let buf = crypto.randomBytes(16)
+const genRandomBytes = (length) => {
+  let buf = crypto.randomBytes(length)
   buf = buf.toString('hex')
   return buf
 }

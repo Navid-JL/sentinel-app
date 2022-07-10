@@ -1,18 +1,23 @@
+// Temporary
+// apodRouter.route('/populate').get(async (req, res) => {
+//   const apods = await getApod({ count: 10 })
+//   await Apod.insertMany(apods)
+//   res.json(apods)
+// })
 const express = require('express')
 const { getTodayImage, getAllImages, populateApodDb } = require('../controllers/apodController')
 
 const apodRouter = express.Router()
 
 // Today's image
-apodRouter.route('/today', getTodayImage)
-
-// Temporary
-/* TODO 
-Remove this route once it has served its purpose
-*/
-apodRouter.route('/populate').get(populateApodDb)
+apodRouter.route('/today').get(getTodayImage)
 
 // All images
 apodRouter.route('/:page?').get(getAllImages)
+
+/* 
+    Add protected routes down here
+    Multiline comment shortcut => Alt + Shift + A
+*/
 
 module.exports = apodRouter
