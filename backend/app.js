@@ -3,18 +3,19 @@ require('dotenv').config()
 const express = require('express')
 const colors = require('colors')
 const connectDB = require('./config/db')
+const { errorHandler } = require('./middleware/errorHandler')
 const morgan = require('morgan')
 const cors = require('cors')
-const { errorHandler } = require('./middleware/errorHandler')
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
-const uuid = require('uuid')
 const helmet = require('helmet')
+const passport = require('passport')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+const cookieParser = require('cookie-parser')
 
 // API: Connect to DB
 connectDB()
 
-// API: create express app
+// API: Create express app
 const app = express()
 
 // API: Helmet
@@ -26,25 +27,34 @@ app.use(morgan('dev'))
 // API: Cors
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5000',
   })
 )
 
 // API: Parse incoming requests
 app.use(express.urlencoded({ extended: true, limit: '100kb' }))
 app.use(express.json({ limit: '150kb' }))
+
+// API: Parse incoming cookies
 app.use(cookieParser())
 
-// API: Enable Session
+// API: Session
 app.use(
   session({
-    genid: function (req) {
-      return uuid.v4()
+    secret: process.env.SESSION_SECRET,
+    name: process.env.SESSION_NAME,
+    resave: true,
+    rolling: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+    }),
+    cookie: {
+      maxAge: parseInt(process.env.COOKIE_MAXAGE),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      signed: true,
     },
-    secret: '809e7ad4d206463843c9',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {},
   })
 )
 
