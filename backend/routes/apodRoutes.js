@@ -6,11 +6,12 @@
 // })
 const express = require('express')
 const { getTodayImage, getAllImages, populateApodDb } = require('../controllers/apodController')
+const protect = require('../auth/protect')
 
 const apodRouter = express.Router()
 
 // Today's image
-apodRouter.route('/today').get(getTodayImage)
+apodRouter.route('/today').get(protect, getTodayImage)
 
 // All images
 apodRouter.route('/:page?').get(getAllImages)
