@@ -5,6 +5,7 @@ const {
   logoutUser,
   myInfo,
   updateMe,
+  deleteMe,
 } = require('../controllers/userController')
 const protect = require('../auth/protect')
 
@@ -20,6 +21,6 @@ userRouter.post('/login', loginUser)
 userRouter.post('/logout', protect, logoutUser)
 
 // Get, update user info
-userRouter.route('/me').get(protect, myInfo).patch(updateMe)
+userRouter.route('/me').get(protect, myInfo).patch(updateMe).delete(deleteMe)
 
 module.exports = userRouter

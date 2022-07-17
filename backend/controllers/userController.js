@@ -122,3 +122,11 @@ exports.updateMe = asyncHandler(async (req, res) => {
   )
   res.json(updatedUser)
 })
+
+// @desc Delete user
+// @route PATCH /api/v1/users/me
+// @access Private
+exports.deleteMe = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(req.session.userId, { active: false })
+  res.json({})
+})
