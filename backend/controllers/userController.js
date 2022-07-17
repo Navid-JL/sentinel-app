@@ -6,7 +6,7 @@ const genJWT = require('../utils/genJWT')
 const bcrypt = require('bcryptjs')
 
 // @desc Register user
-// @route POST /api/v1/users/signup
+// @route POST /api/v1/v1/users/signup
 // @access Public
 exports.registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
@@ -36,6 +36,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
   if (user) {
     // Set loggedIn true in user's session
     req.session.loggedIn = true
+    req.session.userId = user.id
     return res.status(201).json({
       _id: user.id,
       name: user.name,
@@ -45,7 +46,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Authenticate user
-// @route POST /api/users/login
+// @route POST /api/v1/users/login
 // @access Public
 exports.loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
@@ -63,20 +64,28 @@ exports.loginUser = asyncHandler(async (req, res) => {
   // Compare whether user's password match or not
   if (user && (await bcrypt.compare(password, user.password))) {
     // Set loggedIn prop in user's session true
-    req.session.loggedIn = true
-    res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
+    req.session.regenerate((error) => {
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        req.session.loggedIn = true
+        req.session.userId = user.id
+        res.json({
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+        })
+      }
     })
   } else {
+    await bcrypt.compare(password, user.password)
     res.status(401)
     throw new Error('Invalid email or password')
   }
 })
 
 // @desc Log user out
-// @route POST /api/users/logout
+// @route POST /api/v1/users/logout
 // @access Private
 exports.logoutUser = asyncHandler(async (req, res) => {
   if (req.session) {
@@ -89,4 +98,12 @@ exports.logoutUser = asyncHandler(async (req, res) => {
       }
     })
   }
+})
+
+// @desc Get user info
+// @route GET /api/v1/users/me
+// @access Private
+exports.myInfo = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.session.userId)
+  res.json(user)
 })
