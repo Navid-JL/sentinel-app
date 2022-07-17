@@ -107,3 +107,18 @@ exports.myInfo = asyncHandler(async (req, res) => {
   const user = await User.findById(req.session.userId)
   res.json(user)
 })
+
+// @desc Update user info
+// @route PATCH /api/v1/users/me
+// @access Private
+exports.updateMe = asyncHandler(async (req, res) => {
+  const { name, email } = req.body
+  const updatedUser = await User.findByIdAndUpdate(
+    req.session.userId,
+    { name, email },
+    {
+      new: true,
+    }
+  )
+  res.json(updatedUser)
+})

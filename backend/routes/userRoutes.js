@@ -1,5 +1,11 @@
 const express = require('express')
-const { registerUser, loginUser, logoutUser, myInfo } = require('../controllers/userController')
+const {
+  registerUser,
+  loginUser,
+  logoutUser,
+  myInfo,
+  updateMe,
+} = require('../controllers/userController')
 const protect = require('../auth/protect')
 
 const userRouter = express.Router()
@@ -13,7 +19,7 @@ userRouter.post('/login', loginUser)
 // Log user out
 userRouter.post('/logout', protect, logoutUser)
 
-// Get User info
-userRouter.get('/me', protect, myInfo)
+// Get, update user info
+userRouter.route('/me').get(protect, myInfo).patch(updateMe)
 
 module.exports = userRouter
