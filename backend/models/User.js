@@ -35,4 +35,10 @@ const UserSchema = mongoose.Schema(
   }
 )
 
+UserSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  this.find({ active: { $ne: false } })
+  next()
+})
+
 module.exports = mongoose.model('User', UserSchema)
