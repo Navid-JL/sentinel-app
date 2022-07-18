@@ -1,4 +1,6 @@
 // API: import dependencies
+const fs = require('fs')
+const path = require('path')
 require('dotenv').config()
 const express = require('express')
 const colors = require('colors')
@@ -42,7 +44,10 @@ morgan.token('user', function (req, res, param) {
 app.use(
   process.env.NODE_ENV === 'production'
     ? morgan(
-        ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :user :tuna'
+        ':remote-addr - :remote-user [:date[web]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :user :tuna',
+        {
+          stream: fs.createWriteStream(path.join(__dirname, 'logs/', 'server.log'), { flags: 'a' }),
+        }
       )
     : morgan('dev')
 )
@@ -81,9 +86,6 @@ app.use(
   })
 )
 
-// API: Detece device
-app.use(require('express-device').capture())
-
 app.use((req, res, next) => {
   console.log(req.device.type)
   next()
@@ -96,26 +98,6 @@ app.get('/', (req, res) => {
 // API: Endpoints
 app.use('/api/v1/apod', require('./routes/apodRoutes'))
 app.use('/api/v1/users', require('./routes/userRoutes'))
-app.use('/api/v1/admin', require('./routes/adminRoutes'))
-
-const Like = require('./models/Like')
-app.post('/like', async (req, res) => {
-  const { image } = req.body
-  const user = req.session.userId
-  const like = await Like.create({
-    image,
-    user,
-  })
-
-  res.json(like)
-})
-
-app.get('/find/:id', async (req, res) => {
-  const { id } = req.params
-  console.log(id)
-  const result = await Like.findById(id).populate('image').populate('user')
-  res.send(result)
-})
 
 // API: Handle unknown routes
 app.all('*', (req, res, next) => {
