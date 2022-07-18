@@ -2,7 +2,7 @@
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles ['user', 'admin']. role = 'user'
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.session.role)) {
       res.status(403)
       throw new Error('Forbidden')
     }

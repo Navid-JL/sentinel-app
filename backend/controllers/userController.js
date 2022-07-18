@@ -3,6 +3,7 @@ const User = require('../models/User')
 const { checkName, checkEmail, checkPassword } = require('../utils/validators/validateInputs')
 const encryptPassword = require('../utils/encryptPassword')
 const genJWT = require('../utils/genJWT')
+const setUserSession = require('../utils/setUserSession')
 const bcrypt = require('bcryptjs')
 
 // @desc Register user
@@ -16,9 +17,9 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new Error('Please add all fields')
   }
   // Make sure user has provided the right type of data
-  checkName(name)
-  checkEmail(email)
-  checkPassword(password)
+  checkName(name, res)
+  checkEmail(email, res)
+  checkPassword(password, res)
   // Check if user already exists
   const userExists = await User.findOne({ email })
   if (userExists) {
@@ -35,8 +36,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
   // If user is successfully registered
   if (user) {
     // Set loggedIn true in user's session
-    req.session.loggedIn = true
-    req.session.userId = user.id
+    setUserSession(user, req)
     return res.status(201).json({
       _id: user.id,
       name: user.name,
@@ -56,7 +56,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
     throw new Error('Please add all fields')
   }
   // Check whether user's email is standard or not
-  checkEmail(email)
+  checkEmail(email, res)
 
   // Fetch the user from DB
   const user = await User.findOne({ email }).select('+password')
@@ -68,8 +68,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
       if (error) {
         throw new Error(error.message)
       } else {
-        req.session.loggedIn = true
-        req.session.userId = user.id
+        setUserSession(user, req)
         res.json({
           _id: user.id,
           name: user.name,

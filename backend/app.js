@@ -75,15 +75,28 @@ app.use(
     cookie: {
       maxAge: parseInt(process.env.COOKIE_MAXAGE),
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: true,
     },
   })
 )
 
+// API: Detece device
+app.use(require('express-device').capture())
+
+app.use((req, res, next) => {
+  console.log(req.device.type)
+  next()
+})
+
+app.get('/', (req, res) => {
+  res.send(req.device.type)
+})
+
 // API: Endpoints
 app.use('/api/v1/apod', require('./routes/apodRoutes'))
 app.use('/api/v1/users', require('./routes/userRoutes'))
+app.use('/api/v1/admin', require('./routes/adminRoutes'))
 
 const Like = require('./models/Like')
 app.post('/like', async (req, res) => {
