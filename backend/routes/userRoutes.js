@@ -10,6 +10,7 @@ const {
 } = require('../controllers/userController')
 const protect = require('../auth/protect')
 require('../auth/oauth-google')
+const { forgotPassword, resetPassword } = require('../auth/recoverPassword')
 
 const userRouter = express.Router()
 
@@ -20,7 +21,7 @@ userRouter.post('/signup', registerUser)
 userRouter.post('/login', loginUser)
 
 // Log user out
-userRouter.get('/logout', protect, logoutUser)
+userRouter.post('/logout', protect, logoutUser)
 
 // Get, delete user profile
 userRouter.route('/me').get(protect, myInfo).patch(updateMe).delete(deleteMe)
@@ -39,5 +40,10 @@ userRouter.get(
     res.send('Authenticated')
   }
 )
+
+// Recover user's password
+userRouter.post('/forgotpassword', forgotPassword)
+
+userRouter.patch('/resetpassword/:token', resetPassword)
 
 module.exports = userRouter

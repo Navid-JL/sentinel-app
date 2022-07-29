@@ -14,7 +14,7 @@ const sendEmail = asyncHandler(async (options) => {
 
   //   Define options for the email
   const mailOptions = {
-    from: 'Navid Jalili <navidjalili@yahoo.con>',
+    from: 'Sentinel Team <noreply@sendgrid.com>',
     to: options.email,
     subject: options.subject,
     text: options.message,

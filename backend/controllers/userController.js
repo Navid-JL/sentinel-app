@@ -101,7 +101,9 @@ exports.logoutUser = asyncHandler(async (req, res) => {
 // @route GET /api/v1/users/me
 // @access Private
 exports.myInfo = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.session.userId || req.session.passport.user.id)
+  const user = await User.findById(req.session.userId || req.session.passport.user.id).select(
+    '+password'
+  )
   res.json(user)
 })
 
