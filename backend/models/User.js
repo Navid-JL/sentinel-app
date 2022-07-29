@@ -13,7 +13,6 @@ const UserSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
       minLength: 12,
       select: false,
     },
@@ -21,11 +20,6 @@ const UserSchema = mongoose.Schema(
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
-    },
-    active: {
-      type: Boolean,
-      default: true,
-      select: false,
     },
   },
   {

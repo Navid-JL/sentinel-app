@@ -2,7 +2,6 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/User')
 const { checkName, checkEmail, checkPassword } = require('../utils/validators/validateInputs')
 const encryptPassword = require('../utils/encryptPassword')
-const genJWT = require('../utils/genJWT')
 const setUserSession = require('../utils/setUserSession')
 const bcrypt = require('bcryptjs')
 
@@ -21,11 +20,8 @@ exports.registerUser = asyncHandler(async (req, res) => {
   checkEmail(email, res)
   checkPassword(password, res)
   // Check if user already exists
-  const userExists = await User.findOne({ email })
-  if (userExists) {
-    res.status(409)
-    throw new Error('User already exists')
-  }
+  await User.findOne({ email })
+
   // Register user
   const user = await User.create({
     name,
@@ -35,7 +31,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
   })
   // If user is successfully registered
   if (user) {
-    // Set loggedIn true in user's session
+    // Create and set user session
     setUserSession(user, req)
     return res.status(201).json({
       _id: user.id,
@@ -63,11 +59,12 @@ exports.loginUser = asyncHandler(async (req, res) => {
 
   // Compare whether user's password match or not
   if (user && (await bcrypt.compare(password, user.password))) {
-    // Set loggedIn prop in user's session true
+    // regenerate user's session
     req.session.regenerate((error) => {
       if (error) {
         throw new Error(error.message)
       } else {
+        // Save user's role and id in the session
         setUserSession(user, req)
         res.json({
           _id: user.id,
@@ -87,15 +84,16 @@ exports.loginUser = asyncHandler(async (req, res) => {
 // @route POST /api/v1/users/logout
 // @access Private
 exports.logoutUser = asyncHandler(async (req, res) => {
-  if (req.session) {
+  if (req.session.passport || req.session.userId) {
     req.session.destroy((error) => {
-      req.session = null
       if (error) {
         throw new Error(error.message)
       } else {
-        return res.json({ logout: true })
+        res.json({})
       }
     })
+  } else {
+    throw new Error('Not authorized, please log in')
   }
 })
 
@@ -103,7 +101,7 @@ exports.logoutUser = asyncHandler(async (req, res) => {
 // @route GET /api/v1/users/me
 // @access Private
 exports.myInfo = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.session.userId)
+  const user = await User.findById(req.session.userId || req.session.passport.user.id)
   res.json(user)
 })
 
@@ -113,7 +111,7 @@ exports.myInfo = asyncHandler(async (req, res) => {
 exports.updateMe = asyncHandler(async (req, res) => {
   const { name, email } = req.body
   const updatedUser = await User.findByIdAndUpdate(
-    req.session.userId,
+    req.session.userId || req.session.passport.user.id,
     { name, email },
     {
       new: true,
@@ -126,6 +124,11 @@ exports.updateMe = asyncHandler(async (req, res) => {
 // @route PATCH /api/v1/users/me
 // @access Private
 exports.deleteMe = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(req.session.userId, { active: false })
+  await User.findByIdAndDelete(req.session.userId || req.session.passport.user.id)
+  req.session.destroy((error) => {
+    if (error) {
+      throw new Error(error.message)
+    }
+  })
   res.json({})
 })

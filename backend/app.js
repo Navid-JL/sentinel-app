@@ -10,10 +10,11 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 // const csurf = require('csurf');
-const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
+const passport = require('passport')
 
 // API: Connect to DB
 connectDB()
@@ -81,19 +82,22 @@ app.use(
       maxAge: parseInt(process.env.COOKIE_MAXAGE),
       httpOnly: true,
       secure: true,
-      sameSite: true,
+      sameSite: 'strict',
     },
   })
 )
 
-app.use((req, res, next) => {
-  console.log(req.device.type)
-  next()
-})
+// API: Compress response data
+app.use(compression())
 
 app.get('/', (req, res) => {
-  res.send(req.device.type)
+  res.send('Welcome to Sentinel')
 })
+
+// app.use((req, res, next) => {
+//   console.log(req.session)
+//   next()
+// })
 
 // API: Endpoints
 app.use('/api/v1/apod', require('./routes/apodRoutes'))

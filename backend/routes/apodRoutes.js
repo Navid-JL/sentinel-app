@@ -7,11 +7,13 @@
 const express = require('express')
 const { getTodayImage, getAllImages, populateApodDb } = require('../controllers/apodController')
 const protect = require('../auth/protect')
+const apiCache = require('apicache')
+let cache = apiCache.middleware
 
 const apodRouter = express.Router()
 
 // Today's image
-apodRouter.route('/today').get(protect, getTodayImage)
+apodRouter.route('/today').get(protect, cache('2 minutes'), getTodayImage)
 
 // All images
 apodRouter.route('/:page?').get(getAllImages)
